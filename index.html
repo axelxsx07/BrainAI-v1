@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Chat IA - PastranaTechnology</title>
+  <!-- Enlazamos CSS local -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <div class="sidebar" id="sidebar">
+      <div id="loginArea">
+        <a href="registro.html" class="login-link">Login in</a>
+      </div>
+      <h2>
+        <img src="https://raw.githubusercontent.com/axelxsx07/logo/main/2347FCDD-F04C-4C09-87F9-66069E2367B8.png" alt="logo" class="header-logo">
+        CHATS
+      </h2>
+      <ul id="chatList"></ul>
+      <div class="new-chat" id="newChatBtn" onclick="newChat()">➕ Nuevo chat</div>
+      <div class="footer">
+        by: <img src="https://raw.githubusercontent.com/axelxsx07/logo/main/2347FCDD-F04C-4C09-87F9-66069E2367B8.png" alt="logo" class="footer-logo"> PastranaTecnology
+      </div>
+    </div>
+
+    <div class="chat-area" id="chatArea">
+      <div class="chat-header">
+        <button id="toggleSidebar">☰</button>
+        <h1>BrainAI</h1>
+        <input id="chatTitle" type="text" readonly title="No editable">
+        <a href="menu.html" id="menuBtn" title="Ir al menú">
+          <img src="https://raw.githubusercontent.com/axelxsx07/logo/main/2347FCDD-F04C-4C09-87F9-66069E2367B8.png" alt="Menú" class="menu-logo">
+        </a>
+      </div>
+      <div id="conversation"></div>
+      <div class="input-area">
+        <!-- Contenedor para previews de archivos -->
+        <div class="file-preview-container" id="filePreviewContainer"></div>
+
+        <!-- Botón de subir archivos -->
+        <div class="file-upload">
+          <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt,.xlsx,.csv,.png,.jpg,.jpeg,.gif" style="display:none;">
+          <img src="https://raw.githubusercontent.com/axelxsx07/logo/main/IMG_4769.png" class="upload-icon" title="Subir archivo">
+        </div>
+
+        <div id="modeSelector">
+          <div class="modeCard selected" data-mode="general">General</div>
+          <div class="modeCard" data-mode="matematico">Matemático</div>
+          <div class="modeCard" data-mode="cientifico">Científico</div>
+          <div class="modeCard" data-mode="fisico">Físico</div>
+          <div class="modeCard" data-mode="programador">Programador</div>
+          <div class="modeCard" data-mode="quimico">Químico</div>
+          <div class="modeCard" data-mode="lenguajes">Lenguajes</div>
+        </div>
+
+        <div class="input-row">
+          <div class="textarea-wrapper">
+            <textarea id="userInput" placeholder="Escribe tu mensaje..." rows="1"></textarea>
+          </div>
+          <button id="sendBtn" disabled>
+            <img src="https://raw.githubusercontent.com/axelxsx07/logo/refs/heads/main/IMG_4773.jpeg" alt="Enviar" class="send-icon">
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Enlazamos JS local -->
+  <script src="script.js" defer></script>
+</body>
+</html>
