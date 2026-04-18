@@ -20,19 +20,12 @@ def get_connection():
 # Función auxiliar para generar título con Cohere
 def generate_title(text):
     try:
-        prompt = f"Resume en 2 a 4 palabras el tema principal del siguiente mensaje: {text}\nTítulo:"
-        response = co.generate(
-            model='command-r-plus',
-            prompt=prompt,
-            max_tokens=10,
-            temperature=0.5,
-            k=0,
-            p=0.75,
-            frequency_penalty=0,
-            presence_penalty=0,
-            stop_sequences=["\n"],
+        prompt = f"Resume en 2 a 4 palabras el tema principal del siguiente mensaje: {text}"
+        response = co.chat(
+            model='command-r-08-2024',
+            message=prompt
         )
-        return response.generations[0].text.strip()
+        return response.text.strip()
     except Exception:
         return ''
 
@@ -108,7 +101,6 @@ class UnifiedHandler(BaseHTTPRequestHandler):
             self._send_headers(200, 'application/json')
             self.wfile.write(json.dumps({'chats': chats}).encode('utf-8'))
             return
-
         # Servir archivos
         # Servir archivos
         if self.path in ['/', '/index.html']:
@@ -132,10 +124,6 @@ class UnifiedHandler(BaseHTTPRequestHandler):
             from telegram_bot import process_update
             process_update(post_data)
             self.send_response(200)
-            self.end_headers()
-            return
-        else:
-            self.send_response(404)
             self.end_headers()
             return
 
@@ -233,22 +221,28 @@ class UnifiedHandler(BaseHTTPRequestHandler):
 
                 # Construir prompt con el texto extraído ya añadido
                 prompt = get_prompt_by_mode(mode)
-                full_prompt = build_prompt(messages, prompt)
+
+                chat_history = []
+                for m in messages[:-1]:
+                    role = "USER" if m['sender'] == 'user' else "CHATBOT"
+                    chat_history.append({
+                        "role": role,
+                        "message": m['text']
+                    })
+
+                message = messages[-1]['text'] if messages else ""
+
                 try:
-                    response = co.generate(
-                        model='command-r-plus',
-                        prompt=full_prompt,
-                        max_tokens=350,
-                        temperature=0.75,
-                        k=0,
-                        p=0.75,
-                        frequency_penalty=0,
-                        presence_penalty=0,
-                        stop_sequences=["--"],
+                    response = co.chat(
+                        model='command-r-08-2024',
+                        message=prompt + "\n\n" + message,
+                        chat_history=chat_history
                     )
-                    answer = response.generations[0].text.strip()
-                except Exception:
-                    answer = "Error al obtener respuesta de Cohere."
+                    
+                    answer = response.text.strip()
+                except Exception as e:
+                	print("ERROR COHERE:", e)
+                	answer = "Error al obtener respuesta de Cohere."
 
                 messages.append({'text': answer, 'sender': 'bot'})
 
@@ -317,8 +311,8 @@ class UnifiedHandler(BaseHTTPRequestHandler):
                 cookie.load(cookie_header)
                 if 'session_id' in cookie:
                     session_id = cookie['session_id'].value
-                    user_session = sessions.get(session_id)
-
+                    user_session = sessions.get(session_id)  
+                    
             if user_session and chat_id:
                 try:
                     conn = get_connection()
@@ -367,6 +361,7 @@ class UnifiedHandler(BaseHTTPRequestHandler):
                     )
                     rows = c.fetchall()
                     chats = []
+                    
                     for r in rows:
                         chat_id, mode, title_db, messages_json, created_at = r
                         try:

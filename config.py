@@ -3,9 +3,13 @@ import cohere
 from pyngrok import ngrok
 
 # Configuración ngrok y Cohere
-ngrok.set_auth_token("30IUO0tKAb6INPbCEIRBCj9N4fW_46F1JyMvuoUw8ik1pDefC")
-API_KEY_COHERE = 'tEiSQlInoBfW2U1gtSgElZaNHbookFyGzLI2Vuuz'
-co = cohere.Client(API_KEY_COHERE)
+NGROK_TOKEN = "30IUO0tKAb6INPbCEIRBCj9N4fW_46F1JyMvuoUw8ik1pDefC"
+COHERE_API_KEY = "tEiSQlInoBfW2U1gtSgElZaNHbookFyGzLI2Vuuz"
+
+ngrok.set_auth_token(NGROK_TOKEN)
+
+# Inicializar cliente Cohere correctamente
+co = cohere.Client(COHERE_API_KEY)
 
 # Base de datos
 DB_PATH = "users.db"
